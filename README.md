@@ -1,7 +1,7 @@
-# Trial API for Changing Digital
+# Testing CRUD API 
 
 An API for basic authentication using JWT + User CRUD functionality. Built with
-Node, Express.js, and MongoDB for the backend. This is currently deployed on [Heroku](https://trial-auth-api.herokuapp.com/).
+Node, Express.js, and MongoDB for the backend. 
 
 ## Routes
 
@@ -16,11 +16,6 @@ Node, Express.js, and MongoDB for the backend. This is currently deployed on [He
 | PATCH  | api/users/:id     | Update user                   |
 | DELETE | api/users/:id     | Delete user                   |
 
-## Resources
-
-This API only has two resources:
-[Authentication](https://github.com/sirbully/CD-auth-api#authentication) and
-[Users](https://github.com/sirbully/CD-auth-api#users).
 
 ### Authentication
 
