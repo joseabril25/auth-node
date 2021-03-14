@@ -1,12 +1,14 @@
+const jwt = require('jsonwebtoken');
 const ErrorResponse = require('../utils/error.util');
 const asyncHandler = require('../middlewares/async');
-const User = require('../models/user.model');
+const User = require("../models/user-registration.model");
+const Login = require("../models/user-login.model");
 
 // @desc    Register a new user
 // @route   POST /api/v1/auth/register
 // @acces   Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const user = await User.create(req.body);
+  const user = await User.register(req.body);
   sendTokenResponse(user, 200, res);
 });
 
@@ -20,17 +22,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Please provide an email and password'), 400);
   }
 
-  const user = await User.findOne({ email }).select('+password');
-
-  if (!user) {
-    return next(new ErrorResponse('Invalid login credentials'), 401);
-  }
-
-  const isMatch = await user.matchPassword(password);
-
-  if (!isMatch) {
-    return next(new ErrorResponse('Invalid login credentials'), 401);
-  }
+  const user = await Login.login(req.body)
 
   sendTokenResponse(user, 200, res);
 });
@@ -67,7 +59,9 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 // @acces   Local Scope
 const sendTokenResponse = (user, statusCode, res) => {
   // Create token
-  const token = user.getSignedJwtToken();
+  const token = jwt.sign(user, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
 
   const options = {
     expires: new Date(
@@ -83,5 +77,6 @@ const sendTokenResponse = (user, statusCode, res) => {
   res.status(statusCode).cookie('token', token, options).json({
     success: true,
     token,
+    user
   });
 };

@@ -7,18 +7,18 @@ const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
 const hpp = require('hpp');
 const history = require('connect-history-api-fallback');
-const connectDB = require('./config/db.config');
 const errorHandler = require('./middlewares/error');
 
 // Import route files
 const authRoute = require('./routes/auth.route');
 const usersRoute = require('./routes/user.route');
+const connectMySqlDb = require('./config/mysql-db.config');
 
 // Load environment variables
-dotenv.config({ path: './config/config.env' });
+dotenv.config({ path: '.env' });
 
 // Connect to database
-connectDB();
+connectMySqlDb();
 
 const app = express();
 
