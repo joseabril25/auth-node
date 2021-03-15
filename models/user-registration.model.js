@@ -18,13 +18,21 @@ exports.register = asyncHandler(async (req) => {
   const encryptPassword = SHA256(password);
 
   var sql = "INSERT INTO `users`(`firstName`,`lastName`,`middleName`,`bday`, `gender`, `email`, `mobile`, `password`) VALUES ('" + firstName + "','" + lastName + "','" + middleName + "','" + dob + "','" + gender + "','" + email + "','" + mobile + "','" + encryptPassword + "')";
-  
+  var checkQuery = `SELECT * FROM users WHERE email='${email}'`;
+
   return new Promise((resolve, reject) => {
-    connection.query(sql, function(error){
-      if(error){
-        new ErrorResponse(`You have no permission to perform this action`, 401)
-      }else{
-        return resolve({ firstName, lastName, middleName, gender, dob, email, mobile});
+    connection.query(checkQuery, function(error, result) {
+      new ErrorResponse(error, 401)
+      if(result.length > 0) {
+        reject('User already exists');
+      }else {
+        connection.query(sql, function(error){
+          if(error){
+            new ErrorResponse(`You have no permission to perform this action`, 401)
+          }else{
+            return resolve({ firstName, lastName, middleName, gender, dob, email, mobile});
+          }
+        })
       }
     })
   })

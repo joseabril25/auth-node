@@ -21,12 +21,11 @@ services:
   #     context: .
   #     dockerfile: Dockerfile
   #   image: node-mysql-app
+  #   restart: on-failure
   #   depends_on:
   #     - mysqldb
   #   stdin_open: true
-    # tty: true
-    # networks:
-    #   - app-network
+  #   tty: true
 
 # networks:
 #   app-network:

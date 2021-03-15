@@ -8,8 +8,11 @@ const Login = require("../models/user-login.model");
 // @route   POST /api/v1/auth/register
 // @acces   Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const user = await User.register(req.body);
-  sendTokenResponse(user, 200, res);
+  User.register(req.body).then((user) => {
+    sendTokenResponse(user, 200, res);
+  }).catch((error) => {
+    return next(new ErrorResponse(error), 401);
+  });
 });
 
 // @desc    Login user
@@ -22,9 +25,12 @@ exports.login = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Please provide an email and password'), 400);
   }
 
-  const user = await Login.login(req.body)
+  Login.login(req.body).then((user) => {
+    sendTokenResponse(user, 200, res);
+  }).catch((error) => {
+    return next(new ErrorResponse(error), 401);
+  })
 
-  sendTokenResponse(user, 200, res);
 });
 
 // @desc    Logout and clear token

@@ -24,9 +24,12 @@ exports.login = asyncHandler(async (req) => {
       if(error){
         new ErrorResponse(`Invalid login credentials`, 401)
       }else{
-        console.log("🚀 ~ file: user-login.model.js ~ line 24 ~ connection.query ~ result", result)
-
-        return resolve({...result[0]});
+        if(result.length > 0) {
+          delete result[0].password;
+          return resolve({...result[0]});
+        } else {
+          return reject('User does not exist');
+        }
       }
     })
   })
