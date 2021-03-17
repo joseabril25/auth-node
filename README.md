@@ -3,6 +3,11 @@
 An API for basic authentication using JWT + User CRUD functionality. Built with
 Node, Express.js, and MongoDB for the backend. 
 
+## Running the application
+```
+1. Run docker-compose up --build
+2. Run npm run dev or npm run start
+```
 ## Routes
 
 | METHOD | URL               | ACTION                        |
