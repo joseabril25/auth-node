@@ -1,64 +1,30 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const ErrorResponse = require("../utils/error.util");
+var mysql = require('mysql');
+const asyncHandler = require("../middlewares/async");
 
-const UserSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: [true, 'Please input the first name'],
-  },
-  lastName: {
-    type: String,
-    required: [true, 'Please input the last name'],
-  },
-  company: {
-    type: String,
-    required: [true, 'Please input the company'],
-  },
-  email: {
-    type: String,
-    required: [true, 'Please input the email'],
-    unique: true,
-    match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      'Please use a valid email',
-    ],
-  },
-  password: {
-    type: String,
-    required: [true, 'Please add a password'],
-    minlength: 8,
-    select: false,
-  },
-  role: {
-    type: String,
-    enum: ['user', 'moderator'],
-    default: 'user',
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+var connection = mysql.createConnection({
+  host: process.env.MYSQL_ROOT_HOST || '127.0.0.1',
+  user: process.env.MYSQL_ROOT_USER || 'root',
+  password: process.env.MYSQL_ROOT_PASSWORD || 'akdfbakjnclajwcioajseic',
+  database: process.env.MYSQL_DATABASE || 'prime_db',
+  port: process.env.MYSQL_LOCAL_PORT || 3307
+})
 
-UserSchema.pre('save', async function (next) {
-  if (!this.isModified('password') && !this.isModified('role')) next();
-
-  // Encrypt password with bcrypt
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-});
-
-// Sign JWT and return
-UserSchema.methods.getSignedJwtToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
-};
-
-// Match user entered password to hashed password in database
-UserSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-
-module.exports = mongoose.model('User', UserSchema);
+exports.checkUser = asyncHandler(async (email) => {
+  var sql = `SELECT * FROM users WHERE email='${email}'`;
+  
+  return new Promise((resolve, reject) => {
+    connection.query(sql, function(error, result){
+      console.log("🚀 ~ file: user.model.js ~ line 18 ~ connection.query ~ error", error)
+      if(error){
+        new ErrorResponse(`Invalid login credentials`, 401)
+      }else{
+        if(result.length > 0) {
+          return resolve('User exists');
+        } else {
+          return reject('User does not exist');
+        }
+      }
+    })
+  })
+}); 

@@ -17,7 +17,7 @@ exports.register = asyncHandler(async (req) => {
 
   const encryptPassword = SHA256(password);
 
-  var sql = "INSERT INTO `users`(`firstName`,`lastName`,`middleName`,`bday`, `gender`, `email`, `mobile`, `password`) VALUES ('" + firstName + "','" + lastName + "','" + middleName + "','" + dob + "','" + gender + "','" + email + "','" + mobile + "','" + encryptPassword + "')";
+  var sql = "INSERT INTO `users`(`firstName`,`lastName`,`middleName`,`bday`, `gender`, `email`, `mobile`, `password`, `active`) VALUES ('" + firstName + "','" + lastName + "','" + middleName + "','" + dob + "','" + gender + "','" + email + "','" + mobile + "','" + encryptPassword + "','" + 1 + "' )";
   var checkQuery = `SELECT * FROM users WHERE email='${email}'`;
 
   return new Promise((resolve, reject) => {

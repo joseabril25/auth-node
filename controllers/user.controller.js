@@ -1,16 +1,27 @@
 const ErrorResponse = require("../utils/error.util");
 const asyncHandler = require("../middlewares/async");
-const Register = require("../models/user-registration.model");
+const UserData = require("../models/user-data.model");
 
 // @desc    Get all users
 // @route   GET /api/v1/users
 // @access   Private
 exports.getUsers = asyncHandler(async (req, res, next) => {
-  const users = await User.find();
+  const data = await UserData.getData();
 
   res.status(200).json({
     success: true,
-    count: users.length,
-    data: users
+    data
+  });
+});
+
+// @desc    Get all users
+// @route   GET /api/v1/all-users
+// @access   Private
+exports.getAllUsers = asyncHandler(async (req, res, next) => {
+  const data = await UserData.getAllUser();
+
+  res.status(200).json({
+    success: true,
+    data
   });
 });

@@ -9,14 +9,7 @@ Node, Express.js, and MongoDB for the backend.
 | ------ | ----------------- | ----------------------------- |
 | POST   | api/auth/register | Create new user and set token |
 | POST   | api/auth/login    | Set token                     |
-| GET    | api/auth/logout   | Clear token                   |
-| GET    | api/auth/me       | Get current logged in user    |
-| POST   | api/users         | Create new user manually      |
 | GET    | api/users         | Get all users                 |
-| PATCH  | api/users/:id     | Update user                   |
-| DELETE | api/users/:id     | Delete user                   |
-
-
 ### Authentication
 
 - Token-based authentication with JWT/cookies
@@ -37,11 +30,5 @@ Node, Express.js, and MongoDB for the backend.
 
 ### Users
 
-- Add user (Admin only)
-  - API route to manually add user without registering
 - Get all users (Moderator and Admin)
   - API route to fetch all registered users
-- Update user (Current user, Admin, and Moderator)
-  - API route to update details of a specific user
-- Delete user (Current user and Admin)
-  - API route to delete specific user

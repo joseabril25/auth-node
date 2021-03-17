@@ -24,7 +24,8 @@ const connectMySqlDb = async () => {
         gender VARCHAR(255),  
         email VARCHAR(255),  
         password VARCHAR(255),
-        mobile VARCHAR(255)
+        mobile VARCHAR(255),
+        active tinyint(1)
       )`;
   
     console.log('connected as id ' + connection.threadId);
